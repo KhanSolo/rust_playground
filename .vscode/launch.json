@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/guessing_game/target/debug/guessing_game.exe",
+            "program": "${workspaceRoot}/sum/target/debug/sum.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
