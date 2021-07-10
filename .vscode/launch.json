@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/sum/target/debug/sum.exe",
+            "program": "${workspaceRoot}/stack_and_heap/target/debug/stack_and_heap.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
