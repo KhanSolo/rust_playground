@@ -1,9 +1,14 @@
 use std::io;
 
 fn main() {
+    println!("Enter your weight on Earth:");
     let mut input = String::new();
-    io::stdin().read_line(&mut input);
-    let mars_weight = calculate_weight_on_mars(100.0);
+
+    io::stdin().read_line(&mut input).unwrap();
+    let weight : f32 = input.trim().parse().unwrap();
+    dbg!(weight);
+
+    let mars_weight = calculate_weight_on_mars(weight);
     println!("Weight on Mars: {} kg", mars_weight);
 }
 
