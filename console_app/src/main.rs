@@ -1,14 +1,15 @@
 use tiberius::{Client, Config, AuthMethod};
-//use async_std::
 use async_std::net::TcpStream;
 
 #[async_std::main]
 async fn main() -> anyhow::Result<()> {
+
     // Using the builder method to construct the options.
     let mut config = Config::new();
 
     config.host("localhost");
     config.port(1433);
+    config.trust_cert(); // trusting by default
 
     // Using SQL Server authentication.
     config.authentication(AuthMethod::sql_server("plugin", "Y0djcnm"));
