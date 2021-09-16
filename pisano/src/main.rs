@@ -1,34 +1,24 @@
 use std::io;
 
-fn pisano_period(m: u128) -> u128 {
-    let mut previous = 0;
-    let mut current = 1;
-    let mut period = 0u128;
-    for i in 0..m * m {
-        let tmp = (previous + current) % m;
-        previous = current;
-        current = tmp;
-        if previous == 0 && current == 1 {
-            period = i + 1;
+fn fibonacci_modulo2(n: u128, m: u128) -> u128 {
+    let mut fib_prev = 0u128;
+    let mut fib = 1u128;
+    let mut cached = vec![fib_prev, fib];
+
+    for _curr in 1..n {
+        let fib_old = fib;
+        fib = (fib + fib_prev) % m;
+        fib_prev = fib_old;
+
+        if fib_prev == 0 && fib == 1 {
+            cached.pop();
             break;
+        } else {
+            cached.push(fib);
         }
     }
-    println!("pisano_period: {}", period);
-    period
-}
-
-fn fibonacci_modulo(mut n: u128, m: u128) -> u128 {
-    let period = pisano_period(m);
-    n = n % period;
-    let mut previous = 0;
-    let mut current = 1;
-    for _ in 0..n-1 {  
-        println!("{} + {}", previous, current);      
-        let tmp = previous + current;
-        previous = current;
-        current = tmp;
-    }
-    current % m
+    let offset = n % (cached.len() as u128);
+    cached[offset as usize]
 }
 
 fn main() {
@@ -38,7 +28,7 @@ fn main() {
     let n: u128 = split[0].trim().parse().unwrap();
     let m: u128 = split[1].trim().parse().unwrap();
 
-    let result = fibonacci_modulo(n, m);
+    let result = fibonacci_modulo2(n, m);
     println!("{}", result);
 }
 
