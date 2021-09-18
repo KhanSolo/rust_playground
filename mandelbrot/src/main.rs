@@ -1,5 +1,3 @@
-use num::complex::Complex;
-
 fn calculate_mandelbrot(
     max_iters: usize,
     x_min: f64, x_max: f64,
@@ -17,41 +15,55 @@ fn calculate_mandelbrot(
             let escaped_at = mandelbrot_at_point(cx, cy, max_iters);
             row.push(escaped_at);
         }
-
-        //all_
         rows.push(row);
     }
     rows
 }
 
 fn mandelbrot_at_point(cx: f64, cy: f64, max_iters: usize) -> usize {
-    let mut z = Complex { re: 0.0, im: 0.0 };
-    let c = Complex::new(cx, cy);
-
+    let mut z_re = 0.0_f64;
+    let mut z_im = 0.0_f64;
     for i in 0..=max_iters {
-        if z.norm() > 2.0 {
+        let norm = z_re.hypot(z_im);
+        if norm > 2.0 {
             return i;
         }
-        z = z * z + c;
+        //z = z * z + c;
+        let (sq_re, sq_im) = complex_mul(z_re, z_im, z_re, z_im);
+        let (ad_re, ad_im) = complex_add(sq_re, sq_im, cx, cy);
+        z_re = ad_re;
+        z_im = ad_im;
     }    
     max_iters
 }
 
+fn complex_add(re1: f64, im1: f64, re2: f64, im2: f64) -> (f64, f64){
+    (
+        re1 + re2,
+        im1 + im2
+    )
+}
+
+fn complex_mul(re1: f64, im1: f64, re2: f64, im2: f64) -> (f64, f64){
+    (
+        re1 * re2 - im1 * im2,
+        re1 * im2 + re2 * im1
+    )
+}
+
 fn render_mandelbrot(escape_vals: Vec<Vec<usize>>) {
     for row in escape_vals {
-
         let mut line = String::with_capacity(row.len());
         for column in row {
-            //println!("col: {}", column);
             let val = match column {
                 0..=1 => ' ',
                 2..=5 => '.',
-                5..=10 => '•',
+                6..=10 => '•',
                 11..=30 => '*',
-                30..=100 => '+',
-                100..=200 => 'x',
-                200..=400 => '$',
-                400..=700 => '#',
+                31..=100 => '+',
+                101..=200 => 'x',
+                201..=400 => '$',
+                401..=700 => '#',
                 _ => '%',
             };
 
@@ -62,7 +74,6 @@ fn render_mandelbrot(escape_vals: Vec<Vec<usize>>) {
 }
 
 fn main() {
-    let mandelbrot = calculate_mandelbrot(5000, -1.0, 2.0, -2.0, 2.0, 100, 48);
-
+    let mandelbrot = calculate_mandelbrot(1000, -2.2, 0.75, -1.25, 1.25, 100, 48);
     render_mandelbrot(mandelbrot);
 }

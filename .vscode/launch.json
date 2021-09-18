@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/console_app/target/debug/console_app.exe",
+            "program": "${workspaceRoot}/mandelbrot/target/debug/mandelbrot.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
