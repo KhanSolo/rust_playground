@@ -1,9 +1,9 @@
 struct Door {
-    is_open: bool
+    is_open: bool,
 }
 
 impl Door {
-    fn new (is_open: bool) -> Door {
+    fn new(is_open: bool) -> Door {
         Door { is_open }
     }
 }
@@ -30,6 +30,6 @@ mod tests {
     }
 }
 
-fn main(){
-
+fn main() {
+    unimplemented!();
 }
