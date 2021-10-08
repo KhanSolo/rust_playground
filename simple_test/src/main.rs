@@ -1,3 +1,5 @@
+use std::fmt::{Arguments, Formatter};
+
 struct Door {
     is_open: bool,
 }
@@ -18,6 +20,13 @@ impl Openable for Door {
     }
 }
 
+impl ::core::fmt::Debug for Door {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> { 
+        f.write_str("data")
+        //f.write_fmt(Arguments{})
+     }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -31,5 +40,6 @@ mod tests {
 }
 
 fn main() {
-    unimplemented!();
+    let door = Door::new(false);
+    println!("door: `{:?}`", door);
 }
