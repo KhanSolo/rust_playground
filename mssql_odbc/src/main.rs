@@ -1,65 +1,56 @@
-use odbc_iter::{Odbc, ValueRow};
+use odbc::*;
+use odbc::ResultSetState::{NoData, Data};
+use std::io;
+
+fn connect() -> std::result::Result<(), DiagnosticRecord> {
+
+    let env = create_environment_v3().map_err(|e| e.unwrap())?;
+
+    let buffer = String::from("Driver={SQL Server};Server=.;Database=TmsRobots;Uid=plugin;Pwd=Y0djcnm;");
+    //println!("Please enter connection string: ");
+    // Driver={SQL Server};Server=.;Database=TmsRobots;Uid=plugin;Pwd=Y0djcnm;
+    //io::stdin().read_line(&mut buffer).unwrap();
+
+    let conn = env.connect_with_connection_string(&buffer)?;
+    execute_statement(&conn)
+}
+
+fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>) -> Result<()> {
+    let stmt = Statement::with_parent(conn)?;
+
+    let sql_text = String::from("select top 1 * from dataexport30");
+    //println!("Please enter SQL statement string:");
+    //io::stdin().read_line(&mut sql_text).unwrap();
+
+    let result_set_state = stmt.exec_direct(&sql_text)?;
+    match result_set_state {
+        Data(mut stmt) => {
+
+            let cols = stmt.num_result_cols()?;
+            while let Some(mut cursor) = stmt.fetch()? {
+                for i in 1..(cols + 1) {
+                    match cursor.get_data::<&str>(i as u16)? {
+                        Some(val) => {
+                            print!(" {}", val);
+                        },
+                        None => print!(" NULL"),
+                    }
+                }
+                println!("");
+            }
+        }
+        NoData(_) => println!("Query executed, no data returned"),
+    }
+
+    Ok(())
+}
 
 fn main() {
-    // Connect to database using connection string
-    let connection_string =
-        "Driver={SQL Server};Server=.;Database=TmsRobots;Uid=plugin;Pwd=Y0djcnm;";
-    //std::env::var("DB_CONNECTION_STRING").expect("DB_CONNECTION_STRING environment not set");
-    let mut connection = Odbc::connect(&connection_string).expect("failed to connect to database");
+    env_logger::init();
 
-    // Handle statically guards access to connection and provides query functionality
-    let mut db = connection.handle();
-
-    // Get single row single column value
-    println!(
-        "{}",
-        db.query::<String>("SELECT 'hello world'")
-            .expect("failed to run query")
-            .single()
-            .expect("failed to fetch row")
-    );
-
-    // Iterate rows with single column
-    for row in db
-        .query::<String>("SELECT 'hello world' UNION SELECT 'foo bar'")
-        .expect("failed to run query")
-    {
-        println!("{}", row.expect("failed to fetch row"))
-    }
-    // Prints:
-    // hello world
-    // foo bar
-
-    // Iterate rows with multiple columns
-    for row in db
-        .query::<(String, i8)>(
-            "SELECT 'hello world', CAST(24 AS TINYINT) UNION SELECT 'foo bar', CAST(32 AS TINYINT)",
-        )
-        .expect("failed to run query")
-    {
-        let (string, number) = row.expect("failed to fetch row");
-        println!("{} {}", string, number);
-    }
-    // Prints:
-    // hello world 24
-    // foo bar 32
-
-    // Iterate rows with dynamically typed values using `ValueRow` type that can represent
-    // any row
-    for row in db
-        .query::<ValueRow>("SELECT 'hello world', 24 UNION SELECT 'foo bar', 32")
-        .expect("failed to run query")
-    {
-        println!("{:?}", row.expect("failed to fetch row"))
-    }
-    // Prints:
-    // [Some(String("hello world")), Some(Tinyint(24))]
-    // [Some(String("foo bar")), Some(Tinyint(32))]
-
-    for row in db
-        .query::<ValueRow>("SELECT top 2 * from [dbo].[DataExport30]")
-        .expect("failed to run query")
-    {
-        println!("{:?}", row.expect("failed to fetch row"))
+    // todo fix issue with cyrillic symbols
+    match connect() {
+        Ok(()) => println!("Success"),
+        Err(diag) => println!("Error: {}", diag),
     }
 }
