@@ -1,6 +1,5 @@
 use odbc::*;
 use odbc::ResultSetState::{NoData, Data};
-use std::io;
 
 fn connect() -> std::result::Result<(), DiagnosticRecord> {
 
@@ -19,7 +18,7 @@ fn connect() -> std::result::Result<(), DiagnosticRecord> {
 fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>) -> Result<()> {
     let stmt = Statement::with_parent(conn)?;
 
-    let sql_text = String::from("SELECT TOP 1 * FROM [dbo].[Contact] order by 1 desc");
+    let sql_text = String::from("SELECT * FROM [dbo].[Contact] order by 1");
     //println!("Please enter SQL statement string:");
     //io::stdin().read_line(&mut sql_text).unwrap();
 
@@ -30,7 +29,6 @@ fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>) -
             let cols = stmt.num_result_cols()?;
             while let Some(mut cursor) = stmt.fetch()? {
 
-                let a: &Cursor<Allocated, T> = &cursor;
 
                 for i in 1..(cols + 1) {
                     match cursor.get_data::<&str>(i as u16)? {
@@ -50,7 +48,6 @@ fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>) -
 }
 
 fn main() {
-    env_logger::init();
 
     // todo fix issue with cyrillic symbols
     match connect() {
