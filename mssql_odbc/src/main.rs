@@ -49,7 +49,6 @@ fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>) -
 
 fn main() {
 
-    // todo fix issue with cyrillic symbols
     match connect() {
         Ok(()) => println!("Success"),
         Err(diag) => println!("Error: {}", diag),
