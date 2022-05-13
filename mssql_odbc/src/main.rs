@@ -22,10 +22,14 @@ fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>, s
 
     match result_set_state {
         Data(mut stmt) => {
-            let desc = stmt.describe_col(1u16)?;
-            println!("{}", desc.name);
 
             let cols = stmt.num_result_cols()?;
+            for i in 1..=cols{
+                let desc = stmt.describe_col(i as u16)?;
+                print!("{} {:?}, ", desc.name, desc.data_type);
+            }
+            println!("");
+            
             while let Some(mut cursor) = stmt.fetch()? {
 
                 for i in 1..=cols {
