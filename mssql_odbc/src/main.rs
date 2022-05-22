@@ -5,37 +5,39 @@ fn connect() -> std::result::Result<(), DiagnosticRecord> {
 
     let env = create_environment_v3().map_err(|e| e.unwrap())?;
 
-    let buffer = String::from(
-        "Driver={SQL Server};Server=.;Database=BgtTelegramService;Uid=plugin;Pwd=Y0djcnm;ClientCharset=UTF-8;ServerCharset=UTF-8;");
+    let buffer = String::from("Driver={SQL Server};Server=.;Database=BgtTelegramService;Uid=plugin;Pwd=Y0djcnm;ClientCharset=UTF-8;ServerCharset=UTF-8;");
     //println!("Please enter connection string: ");
     // Driver={SQL Server};Server=.;Database=TmsRobots;Uid=plugin;Pwd=Y0djcnm;
     //io::stdin().read_line(&mut buffer).unwrap();
 
     let conn = env.connect_with_connection_string(&buffer)?;
-    execute_statement(&conn)
+    let sql_text = String::from("SELECT * FROM [dbo].[Contact] order by 1");
+    execute_statement(&conn, &sql_text)
 }
 
-fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>) -> Result<()> {
+fn execute_statement<T: odbc::odbc_safe::AutocommitMode>(conn: &Connection<T>, sql_text: &str) -> Result<()> {
+
     let stmt = Statement::with_parent(conn)?;
-
-    let sql_text = String::from("SELECT * FROM [dbo].[Contact] order by 1");
-    //println!("Please enter SQL statement string:");
-    //io::stdin().read_line(&mut sql_text).unwrap();
-
     let result_set_state = stmt.exec_direct(&sql_text)?;
+
     match result_set_state {
         Data(mut stmt) => {
 
             let cols = stmt.num_result_cols()?;
+            for i in 1..=cols{
+                let desc = stmt.describe_col(i as u16)?;
+                print!("{} {:?}, ", desc.name, desc.data_type);
+            }
+            println!("");
+            
             while let Some(mut cursor) = stmt.fetch()? {
 
-
-                for i in 1..(cols + 1) {
+                for i in 1..=cols {
                     match cursor.get_data::<&str>(i as u16)? {
                         Some(val) => {
                             print!(" {}", val);
                         },
-                        None => print!(" NULL"),
+                        None => print!(" <null>"),
                     }
                 }
                 println!("");
