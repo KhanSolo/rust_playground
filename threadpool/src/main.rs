@@ -1,8 +1,14 @@
 use std::sync::mpsc::channel;
-use threadpool::ThreadPool;
+use cpus::get;
+use threadpool::*;
+
+mod cpus;
+mod threadpool;
 
 fn main() {
-    let n_workers = 4;
+    println!("cpu count: {}", get());
+
+    let n_workers = get();
     let n_jobs = 8;
     let pool = ThreadPool::new(n_workers);
 
@@ -16,3 +22,4 @@ fn main() {
 
     println!("result: {}", rx.iter().take(n_jobs).fold(0, |a, b| a + b));
 }
+
