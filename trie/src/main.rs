@@ -3,6 +3,9 @@ mod trie;
 use trie::Trie;
 
 fn main() {
-    let trie = Trie::new();
-    println!("{:?}", trie);
+    let mut trie = Trie::new();
+
+    trie.add("abc".to_owned(), 1);
+
+    //println!("{:#?}", trie);
 }
