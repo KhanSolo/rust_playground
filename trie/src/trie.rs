@@ -30,27 +30,33 @@ impl Trie {
 
     pub fn add(&mut self, string: String, value:u32){
 
-        let node = &mut self.head;
+        let mut node = &mut self.head;
         for c in string.chars() {
 
-            let mut nd =
-                match moving(node).children.get_key_value(&c) {
-                    Some((_, mut n)) => {
-                        println!("Some {:?}", n);
-                        n
-                    },
-                    None => {
-                        let new_node = Node {
-                            value:None,
+            node = node.children
+                .entry(c)
+                .or_insert(Node{
+                           value:None,
                             max_child_value: None,
                             children : HashMap::new(),
-                        };
-                        let childs = &mut node.children;
-                        childs.insert(c, new_node);
-                        &mut new_node
-                    },
-                };
-                node = nd;
+            });
+                // match moving(node).children.get_key_value(&c) {
+                //     Some((_, mut n)) => {
+                //         println!("Some {:?}", n);
+                //         n
+                //     },
+                //     None => {
+                //         let new_node = Node {
+                //             value:None,
+                //             max_child_value: None,
+                //             children : HashMap::new(),
+                //         };
+                //         let childs = &mut node.children;
+                //         childs.insert(c, new_node);
+                //         &mut new_node
+                //     },
+                // };
+
         }
         node.value = Some(value);
     }

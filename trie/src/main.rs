@@ -7,5 +7,5 @@ fn main() {
 
     trie.add("abc".to_owned(), 1);
 
-    //println!("{:#?}", trie);
+    println!("{:#?}", trie);
 }
