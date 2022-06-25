@@ -9,7 +9,17 @@ fn main() {
         }
     };
 
-    for str in input.lines() {
-        println!("{}", str);
-    }
+    let good_lines: Vec<_> = input
+        .lines()
+        .filter(|l| starts_with_capital_letter(l))
+        .collect();
+
+    dbg!(good_lines);
+}
+
+fn starts_with_capital_letter(s: &str) -> bool {
+    matches!(
+        s.chars().next(), // what
+        Some(c) if c.is_uppercase() // condition
+    )
 }
