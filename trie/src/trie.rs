@@ -47,4 +47,9 @@ impl Trie {
         node.value = Some(value);
         node.max_child_value = Some(value);
     }
+
+    pub fn get(&self, query: String) -> Vec<String>{
+        
+        Vec::new()
+    }
 }

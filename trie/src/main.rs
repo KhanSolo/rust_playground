@@ -12,4 +12,9 @@ fn main() {
     trie.add("sakura".to_owned(), 3);
 
     println!("{:#?}", trie);
+
+    let response = trie.get("k".to_owned());
+    for line in response {
+        println!("{}", line);
+    }
 }
