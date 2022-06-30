@@ -1,4 +1,4 @@
-use std::collections::{HashMap, hash_map::Entry};
+use std::collections::{hash_map::Entry, HashMap};
 use std::fmt::Debug;
 
 #[derive(Debug)]
@@ -30,14 +30,21 @@ impl Trie {
         let mut node = &mut self.head;
         for c in string.chars() {
             node = match node.children.entry(c) {
-                Entry::Occupied(entry) => entry.into_mut(),
+                Entry::Occupied(entry) => {
+                    let m = entry.into_mut();
+                    if m.max_child_value < Some(value) {
+                        m.max_child_value = Some(value);
+                    }
+                    m
+                }
                 Entry::Vacant(entry) => entry.insert(Node {
                     value: None,
-                    max_child_value: None,
+                    max_child_value: Some(value),
                     children: HashMap::new(),
                 }),
             };
         }
         node.value = Some(value);
+        node.max_child_value = Some(value);
     }
 }
