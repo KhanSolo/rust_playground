@@ -13,8 +13,6 @@ pub struct Trie {
     head: Node,
 }
 
-//fn moving<T>(t:T)->T{t}
-
 impl Trie {
     pub fn new() -> Self {
         Trie {
@@ -26,7 +24,11 @@ impl Trie {
         }
     }
 
-    pub fn add(&mut self, string: String, value: u32) {
+    pub fn add_tuple(&mut self, (a,b):(&str, u32)) {
+        self.add(a, b);
+    }
+
+    pub fn add(&mut self, string: &str, value: u32) {
         let mut node = &mut self.head;
         for c in string.chars() {
             node = match node.children.entry(c) {
@@ -48,8 +50,26 @@ impl Trie {
         node.max_child_value = Some(value);
     }
 
-    pub fn get(&self, query: String) -> Vec<String>{
-        
+    pub fn is_exists(&self, entry: &str) -> bool {
+        false
+    }
+
+    pub fn prefix(&self, query: &str) -> Vec<String>{
+
         Vec::new()
     }
+}
+
+
+#[macro_export]
+macro_rules! trie {
+    ( $( $x:expr ),* ) => {
+        {
+            let mut temp_vec = Trie::new();
+            $(
+                temp_vec.add_tuple($x);
+            )*
+            temp_vec
+        }
+    };
 }
