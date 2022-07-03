@@ -1,9 +1,11 @@
 mod trie;
 
-use trie::Trie;
+#[cfg(test)]
+mod trie_tests;
+
+use crate::trie::Trie;
 
 fn main() {
-
     let trie = trie!(
         ("kare", 10),
         ("kanojo", 20),
@@ -12,7 +14,7 @@ fn main() {
         ("sakura", 3)
     );
 
-    println!("{:#?}", trie);
+    //println!("{:#?}", trie);
 
     let response = trie.prefix("k");
     for line in response {

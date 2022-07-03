@@ -24,7 +24,7 @@ impl Trie {
         }
     }
 
-    pub fn add_tuple(&mut self, (a,b):(&str, u32)) {
+    pub fn add_tuple(&mut self, (a, b): (&str, u32)) {
         self.add(a, b);
     }
 
@@ -50,16 +50,24 @@ impl Trie {
         node.max_child_value = Some(value);
     }
 
-    pub fn is_exists(&self, entry: &str) -> bool {
-        false
+    pub fn is_exists(&mut self, entry: &str) -> bool {
+        let mut node = &mut self.head;
+        for c in entry.chars() {
+            node = match node.children.entry(c) {
+                Entry::Occupied(n) => n.into_mut(),
+                Entry::Vacant(_) => return false,
+            };
+        }
+        match node.value {
+            Some(_) => true,
+            None => false,
+        }
     }
 
-    pub fn prefix(&self, query: &str) -> Vec<String>{
-
+    pub fn prefix(&self, query: &str) -> Vec<String> {
         Vec::new()
     }
 }
-
 
 #[macro_export]
 macro_rules! trie {
