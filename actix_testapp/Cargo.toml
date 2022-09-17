@@ -6,5 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-rt="1.1.1"
-actix-web = "3.3.3"
+#actix-rt="1.1.1"
+actix-web = "4.2.1"
+tokio = { version = "1.21.1", features = ["macros", "rt-multi-thread"] }
+
+[profile.release]
+strip = true        # strips symbols from binary
+opt-level = "s"     # optimization for binary size
+lto = true          # link time optimization
+codegen-units = 1   #  default = 16. Setting this to 1 may improve the performance of generated code, but may be slower to compile.

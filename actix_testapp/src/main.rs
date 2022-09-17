@@ -1,6 +1,6 @@
 use actix_web::{web, App, HttpRequest, HttpServer, Responder};
 
-#[actix_rt::main]
+#[tokio::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
