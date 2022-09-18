@@ -1,16 +1,6 @@
-use futures::{
-    future::{BoxFuture, FutureExt},
-    task::{waker_ref, ArcWake},
-};
-use std::{
-    future::Future,
-    sync::mpsc::{sync_channel, Receiver, SyncSender},
-    sync::{Arc, Mutex},
-    task::Context,
-    time::Duration,
-};
+mod timer_future;
 
-//use timer_future::TimerFuture;
+use timer_future::TimerFuture;
 
 // `block_on` blocks the current thread until the provided future has run to
 // completion. Other executors provide more complex behavior, like scheduling
