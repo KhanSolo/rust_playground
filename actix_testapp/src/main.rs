@@ -1,22 +1,26 @@
 use actix_web::{web, App, HttpRequest, HttpServer, Responder};
 
 mod appsettings;
+mod handlers;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
+    println!("Starting");
     let app_settings = appsettings::load::load_settings()?;
+    println!("appsettings loaded");
 
+    let res =
     HttpServer::new(|| {
-        App::new()
-            .route("/", web::get().to(greet))
-            .route("/{name}", web::get().to(greet))
+        let app = App::new()
+                    .route("/", web::get().to(handlers::greet))
+                    .route("/{name}", web::get().to(handlers::greet));
+            println!("App created");
+            app
     })
     .bind(app_settings.baseurl)?
     .run()
-    .await
+    .await;
+    println!("Completed");
+    res
 }
 
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello, {}!", &name)
-}
