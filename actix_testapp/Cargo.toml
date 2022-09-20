@@ -3,6 +3,13 @@ name = "actix_testapp"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+path = "src/main.rs"
+name = "actix_testapp"
+
 [dependencies]
 actix-web = "4.2.1"
 tokio = { version = "1.21.1", features = ["macros", "rt-multi-thread"] }
