@@ -1,4 +1,5 @@
 use actix_web::{web, App, HttpServer};
+use std::thread;
 
 mod appsettings;
 mod handlers;
@@ -16,7 +17,8 @@ async fn main() -> std::io::Result<()> {
                     .route("/health_check", web::get().to(handlers::health_check))
                     .route("/{name}", web::get().to(handlers::greet))
                     ;
-            println!("App created");
+            let id = thread::current().id();
+            println!("App created: {id:?}");
             app
     })
     .bind(app_settings.baseurl)?
