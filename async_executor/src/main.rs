@@ -51,18 +51,22 @@ fn new_executor_and_spawner() -> (Executor, Spawner) {
 
 //-----------
 impl Spawner {
-    fn spawn(&self, future: impl Future<Output = ()> + 'static + Send) {
-        let future = future.boxed();
-        let task = Arc::new(Task {
-            future: Mutex::new(Some(future)),
-            task_sender: self.task_sender.clone(),
-        });
-        self.task_sender.send(task).expect("too many tasks queued");
-    }
+    fn spawn(&self,
+         future: impl Future<Output = ()> + 'static + Send
+        ) {
+            println!("spawn");
+            let future = future.boxed();
+            let task = Arc::new(Task {
+                future: Mutex::new(Some(future)),
+                task_sender: self.task_sender.clone(),
+            });
+            self.task_sender.send(task).expect("too many tasks queued");
+        }
 }
 
 impl ArcWake for Task {
     fn wake_by_ref(arc_self: &Arc<Self>) {
+        println!("wake_by_ref");
         // Implement `wake` by sending this task back onto the task channel
         // so that it will be polled again by the executor.
         let cloned = arc_self.clone();
@@ -75,6 +79,7 @@ impl ArcWake for Task {
 
 impl Executor {
     fn run(&self) {
+        println!("run started");
         while let Ok(task) = self.ready_queue.recv() {
             // Take the future, and if it has not yet completed (is still Some),
             // poll it in an attempt to complete it.
@@ -94,6 +99,7 @@ impl Executor {
                 }
             }
         }
+        println!("run completed");
     }
 }
 
