@@ -64,8 +64,22 @@ impl Trie {
         }
     }
 
-    pub fn prefix(&self, query: &str) -> Vec<String> {
-        Vec::new()
+    pub fn prefix(&mut self, query: &str) -> Vec<(&str, u32)> {
+        let mut result = Vec::new();
+
+        if !query.is_empty() {
+            let mut node = &mut self.head;
+            for c in query.chars() {
+                node = match node.children.entry(c) {
+                    Entry::Occupied(n) => n.into_mut(),
+                    Entry::Vacant(a) => {
+                            todo!()
+                    },
+                };
+            }
+
+        }
+        result
     }
 }
 
