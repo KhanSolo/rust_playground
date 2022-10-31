@@ -1,8 +1,7 @@
 #[tokio::test]
 async fn health_check_works() {
     // Arrange
-    spawn_app().await.expect("Failed to spawn our app.");
-
+    spawn_app();
     let client = reqwest::Client::new();
 
     // Act
@@ -17,6 +16,7 @@ async fn health_check_works() {
     assert_eq!(Some(0), response.content_length());
 }
 
-async fn spawn_app() -> std::io::Result<()> {
-    actix_testapp::run().await
+fn spawn_app() {
+    let server = actix_testapp::run().expect("failed to bind");
+    let _ = tokio::spawn(server);
 }

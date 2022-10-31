@@ -1,13 +1,14 @@
 use actix_web::{web, App, HttpServer};
+use actix_web::dev::Server;
 use std::thread;
 
 mod appsettings;
 mod handlers;
 
-pub async fn run() -> std::io::Result<()> {
-    println!("Starting");
+pub fn run() -> Result<Server, std::io::Error> {
+
     let app_settings = appsettings::load::load_settings()?;
-    println!("appsettings loaded: {}", &app_settings.baseurl);
+    println!("appsettings loaded: {:?}", &app_settings);
 
     let res = HttpServer::new(|| {
         let app = App::new()
@@ -19,8 +20,7 @@ pub async fn run() -> std::io::Result<()> {
         app
     })
     .bind(app_settings.baseurl)?
-    .run()
-    .await;
-    println!("Completed");
-    res
+    .run();
+
+    Ok(res)
 }

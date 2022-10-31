@@ -2,7 +2,7 @@ use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Appsettings {
     pub baseurl: String,
 }
