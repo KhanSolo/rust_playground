@@ -1,12 +1,11 @@
-use actix_web::{web, App, HttpServer};
 use actix_web::dev::Server;
-use std::thread;
+use actix_web::{web, App, HttpServer};
 use std::net::TcpListener;
+use std::thread;
 
 mod handlers;
 
 pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
-
     let res = HttpServer::new(|| {
         let app = App::new()
             .route("/", web::get().to(handlers::greet))
