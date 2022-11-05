@@ -1,10 +1,20 @@
-use actix_web::{HttpRequest, HttpResponse, Responder};
+use actix_web::{web, HttpRequest, HttpResponse, Responder};
 
-pub async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello, {}!", &name)
+// pub async fn greet(req: HttpRequest) -> impl Responder {
+//     let name = req.match_info().get("name").unwrap_or("World");
+//     format!("Hello, {}!", &name)
+// }
+
+pub async fn health_check() -> HttpResponse {
+    HttpResponse::Ok().finish()
 }
 
-pub async fn health_check(_: HttpRequest) -> impl Responder {
+#[derive(serde::Deserialize)]
+pub struct FormData {
+    email: String,
+    name: String,
+}
+
+pub async fn subscribe(_form: web::Form<FormData>) -> HttpResponse {
     HttpResponse::Ok().finish()
 }
