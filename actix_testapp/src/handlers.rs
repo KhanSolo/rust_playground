@@ -1,3 +1,4 @@
+#[warn(dead_code)]
 use actix_web::{web, HttpRequest, HttpResponse, Responder};
 
 // pub async fn greet(req: HttpRequest) -> impl Responder {
