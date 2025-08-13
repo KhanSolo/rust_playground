@@ -10,3 +10,5 @@ Cargo.lock
 **/*.rs.bk
 /dynamic_lib/obj/*
 */.vs/*
+
+**/target/*
