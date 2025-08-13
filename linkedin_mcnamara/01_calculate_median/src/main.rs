@@ -12,6 +12,11 @@ fn main() {
 }
 
 fn median(vec: &mut Vec<f32>) -> Option<f32> {
+    fn get_m(vec: &mut Vec<f32>) -> usize {
+        vec.sort_by(|x,y| x.partial_cmp(y).unwrap_or(Ordering::Equal));
+        vec.len() / 2
+    }
+
     match vec.len() {
         0 => None,
         n if n%2==0 => {
@@ -23,11 +28,6 @@ fn median(vec: &mut Vec<f32>) -> Option<f32> {
             Some(vec[m])
         }
     }
-}
-
-fn get_m(vec: &mut Vec<f32>) -> usize {
-    vec.sort_by(|x,y| x.partial_cmp(y).unwrap_or(Ordering::Equal));
-    vec.len() / 2
 }
 
 #[cfg(test)]
